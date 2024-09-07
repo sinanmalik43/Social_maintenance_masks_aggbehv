@@ -1,0 +1,49 @@
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+from scipy.stats import mannwhitneyu
+
+# Data for Control (CNTRL) and Hungry (HGRY) groups
+control = [153.93, 201.16, 167.67, 257.25, 258.99, 245.72, 174.01, 159.91, 
+           178.65, 166.85, 177.02, 193.17, 175.37, 176.71, 214.99, 203.91, 
+           212.62, 228.31, 196.21, 216.82]
+hungry = [290.97, 336.45, 355.81, 357.2, 356.51, 350.16, 357.58, 358.35, 
+          359.3, 314.23, 358.16, 297.79, 316.03, 326.66, 345.75, 345.62, 
+          323.2, 355.51, 357.17, 354.99]
+
+# Mann-Whitney U test
+stat, p = mannwhitneyu(control, hungry)
+
+# Set significance level
+alpha = 0.05
+significance = 'ns'
+if p < alpha:
+    significance = '*'
+
+# Create boxplot
+plt.figure(figsize=(4.5, 6))
+sns.boxplot(data=[control, hungry], palette=["#F7F7F7", "#F7F7F7"], width=0.29)
+sns.stripplot(data=[control, hungry], palette=["#9932CC", "#483D8B"], jitter=True, size=6)
+
+# Add space before the y-axis
+plt.xlim(left=-0.5)  # Adjust this value to increase or decrease the space
+
+# Adding the significance label and line
+y, h, col = max(max(control), max(hungry)) + 10, 10, 'k'
+plt.plot([0, 0, 1, 1], [y, y + h, y + h, y], lw=1, c=col)
+plt.text(0.5, y + h + 2, significance, ha='center', va='bottom', color=col, fontsize=16)
+
+# Remove top and right spines
+sns.despine(left=False, bottom=False)
+
+# Customize plot
+plt.xticks([0, 1], ['Control', 'Hungry'], fontname='Arial', fontsize=12)
+plt.ylabel('Slow time (s)',labelpad=5.5, size=12, fontname='Arial')
+plt.tick_params(axis='x', which='minor', pad=6)  # Adjust the pad value as needed
+plt.title('')
+
+#plt the figure with high resolution (format="png", dpi=2000)
+
+# Show the plot
+plt.show()
