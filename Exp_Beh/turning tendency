@@ -1,0 +1,52 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+
+# Given data
+samples = np.arange(1, 21)
+turning_tendency_cntrl = [-0.05, 0.01, 0.09, 0.02, -0.02, 0.01, -0.2, -0.01, -0.02, -0.01,
+              0, 0.03, 0.01, -0.16, 0.02, -0.02, 0.02, 0.01, -0.04, 0.08]
+turning_tendency_hgry = [-0.01, -0.04, 0, 0.01, 0, 0.13, 0.01, -0.03, 0.08, -0.01,
+             0, 0.02, 0.05, 0.03, 0, 0.01, 0.05, -0.03, -0.03, 0.02]
+
+# Cosine function for fitting
+def cosine_func(x, A, B, C):
+    return A * np.cos(B * x + C)
+
+# Fit cosine to the control fish data
+popt_cntrl, _ = curve_fit(cosine_func, samples, turning_tendency_cntrl, p0=[0.1, 0.1, 0.1])
+
+# Fit cosine to the hungry fish data
+popt_hgry, _ = curve_fit(cosine_func, samples, turning_tendency_hgry, p0=[0.1, 0.1, 0.1])
+
+# Generate fitted values using the optimal parameters
+cntrl_fit = cosine_func(samples, *popt_cntrl)
+hgry_fit = cosine_func(samples, *popt_hgry)
+
+# Plotting the data
+plt.figure(figsize=(6.2, 4.8))
+
+# Plot for Control Fish
+plt.subplot(2, 1, 1)
+plt.plot(samples, turning_tendency_cntrl, 'bo-', label="Control")
+plt.plot(samples, cntrl_fit, 'r--')
+plt.title('')
+plt.xlabel('Sample Index')
+plt.ylabel('Turning Tendency')
+plt.grid(True)
+plt.legend(loc='lower right')
+
+# Plot for Hungry Fish
+plt.subplot(2, 1, 2)
+plt.plot(samples, turning_tendency_hgry, 'ro-', label="Hungry")
+plt.plot(samples, hgry_fit, 'b--')
+plt.title('')
+plt.xlabel('Sample Index')
+plt.ylabel('Turning Tendency')
+plt.grid(True)
+plt.legend()
+
+#plt the figure with high resolution (format="png", dpi=2000)
+
+plt.tight_layout()
+plt.show()
