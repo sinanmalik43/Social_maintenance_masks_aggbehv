@@ -1,0 +1,40 @@
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Example DataFrame setup
+data = {
+    'Parallel_Index_CNTRL': [0.69, 0.86, 0.73, 0.74, 0.75, 0.73, 0.74, 0.73, 0.80, 0.79,
+                             0.70, 0.76, 0.75, 0.80, 0.71, 0.82, 0.79, 0.66, 0.77, 0.69],
+    'Parallel_Index_HGRY': [0.76, 0.83, 0.68, 0.74, 0.83, 0.84, 0.82, 0.76, 0.84, 0.77,
+                            0.79, 0.78, 0.79, 0.80, 0.76, 0.72, 0.72, 0.78, 0.77, 0.79]
+}
+df = pd.DataFrame(data)
+
+# Sort data for cumulative probability calculation
+df_sorted_cntrl = df.sort_values(by='Parallel_Index_CNTRL')
+df_sorted_hgry = df.sort_values(by='Parallel_Index_HGRY')
+
+# Calculate cumulative probability for control and hungry conditions
+df_sorted_cntrl['Cumulative_Probability_CNTRL'] = np.arange(1, len(df_sorted_cntrl) + 1) / len(df_sorted_cntrl)
+df_sorted_hgry['Cumulative_Probability_HGRY'] = np.arange(1, len(df_sorted_hgry) + 1) / len(df_sorted_hgry)
+
+# Plot cumulative probability against Parallel Index for both conditions
+plt.figure(figsize=(6.4, 4.8))
+plt.plot(df_sorted_cntrl['Parallel_Index_CNTRL'], df_sorted_cntrl['Cumulative_Probability_CNTRL'], 
+         marker='o', linestyle='-', color='blue', label='Control')
+plt.plot(df_sorted_hgry['Parallel_Index_HGRY'], df_sorted_hgry['Cumulative_Probability_HGRY'], 
+         marker='o', linestyle='-', color='red', label='Hungry')
+
+
+
+# Remove top and right spines
+sns.despine(left=False, bottom=False)
+
+#plt the figure with high resolution (format="png", dpi=2000)
+
+plt.xlabel('Parallel Index (PI)',labelpad=5.5, size=10)
+plt.ylabel('Cumulative probability', labelpad=5.5, size=10)
+plt.legend(loc='center right')
+plt.show()
