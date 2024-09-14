@@ -1,3 +1,5 @@
+@author: neuronalplasticity group (sinanmalik)
+"""
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -5,12 +7,8 @@ import numpy as np
 from scipy.stats import mannwhitneyu
 
 # Data for Control (CNTRL) and Hungry (HGRY) groups
-control = [153.93, 201.16, 167.67, 257.25, 258.99, 245.72, 174.01, 159.91, 
-           178.65, 166.85, 177.02, 193.17, 175.37, 176.71, 214.99, 203.91, 
-           212.62, 228.31, 196.21, 216.82]
-hungry = [290.97, 336.45, 355.81, 357.2, 356.51, 350.16, 357.58, 358.35, 
-          359.3, 314.23, 358.16, 297.79, 316.03, 326.66, 345.75, 345.62, 
-          323.2, 355.51, 357.17, 354.99]
+control = [] data {insert the data with groups or add the csv file with data}
+hungry = []
 
 # Mann-Whitney U test
 stat, p = mannwhitneyu(control, hungry)
