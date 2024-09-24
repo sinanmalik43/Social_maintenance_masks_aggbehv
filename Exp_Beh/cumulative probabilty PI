@@ -30,7 +30,7 @@ plt.plot(df_sorted_hgry['Parallel_Index_HGRY'], df_sorted_hgry['Cumulative_Proba
 # Remove top and right spines
 sns.despine(left=False, bottom=False)
 
-#plt the figure with high resolution (format="png", dpi=2000)
+#plt the figure with high resolution (format="png", dpi=600)
 
 plt.xlabel('Parallel Index (PI)',labelpad=5.5, size=10)
 plt.ylabel('Cumulative probability', labelpad=5.5, size=10)
