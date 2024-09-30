@@ -5,7 +5,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Data setup: Manually creating the DataFrame since the CSV is not provided
 data = { add the data file in csv} input
 
 # Step 1: Create a DataFrame from the data
@@ -62,7 +61,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Data setup: Manually creating the DataFrame since the CSV is not provided
 data = { add data }
 
 # Step 1: Create a DataFrame from the data
@@ -105,6 +103,62 @@ plt.xticks(time_points)  # Ensure only 60, 120, 180, 240, 300 are shown on x-axi
 plt.xlim([60, 300])  # Set x-axis limits to start at 60 and end at 300
 plt.grid(True)
 plt.legend()
+
+# Step 6: Display the plot
+plt.show()
+
+----------------
+
+Removed labels
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+data = { }
+
+# Step 1: Create a DataFrame from the data
+df = pd.DataFrame(data)
+
+# Step 2: Calculate the average and standard deviation for each group over time
+time_points = [60, 120, 180, 240, 300]
+control_avg = df[['Control + M_60s', 'Control + M_120s', 'Control + M_180s', 'Control + M_240s', 'Control + M_300s']].mean()
+hungry_avg = df[['Hungry + M_60s', 'Hungry + M_120s', 'Hungry + M_180s', 'Hungry + M_240s', 'Hungry + M_300s']].mean()
+
+control_std = df[['Control + M_60s', 'Control + M_120s', 'Control + M_180s', 'Control + M_240s', 'Control + M_300s']].std()
+hungry_std = df[['Hungry + M_60s', 'Hungry + M_120s', 'Hungry + M_180s', 'Hungry + M_240s', 'Hungry + M_300s']].std()
+
+n = len(df)  # Number of data points for each time point
+z = 1.96  # Z-value for 95% confidence interval
+
+# Step 3: Calculate the confidence intervals
+control_ci_upper = control_avg + z * (control_std / np.sqrt(n))
+control_ci_lower = control_avg - z * (control_std / np.sqrt(n))
+
+hungry_ci_upper = hungry_avg + z * (hungry_std / np.sqrt(n))
+hungry_ci_lower = hungry_avg - z * (hungry_std / np.sqrt(n))
+
+# Step 4: Plot the data
+plt.figure(figsize=(6.4, 4.8))
+
+# Plot for Control group with confidence band
+plt.plot(time_points, control_avg, label="Control  + M", color='blue',marker='>', linewidth=2)
+plt.fill_between(time_points, control_ci_lower, control_ci_upper, color='lightblue', alpha=0.5)
+
+# Plot for Hungry group with confidence band
+plt.plot(time_points, hungry_avg, label="Hungry + M ", color='red',marker='>', linewidth=2)
+plt.fill_between(time_points, hungry_ci_lower, hungry_ci_upper, color='lightcoral', alpha=0.5)
+
+# Step 5: Customize the plot
+plt.title('', fontsize=16)
+plt.xlabel('Seconds', fontsize=12, fontname='Arial')
+plt.ylabel('Number of Mirror Bites', fontsize=12, fontname='Arial')
+plt.xticks(time_points)  # Ensure only 60, 120, 180, 240, 300 are shown on x-axis
+plt.xlim([60, 300])  # Set x-axis limits to start at 60 and end at 300
+plt.grid(True)
+plt.legend()
+
+#plt the figure with high resolution (format="png", dpi=2000)
 
 # Step 6: Display the plot
 plt.show()
