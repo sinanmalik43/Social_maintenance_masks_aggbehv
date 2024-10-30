@@ -1,0 +1,25 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Data for HGRY + M and CNTRL + M
+hgry_m = [778, 763, 752, 667, 921, 846, 654, 572, 214, 736, 762, 811, 598, 712, 654, 797, 958, 824, 818, 1032]
+cntrl_m = [263, 217, 131, 16, 212, 314, 237, 46, 372, 103, 164, 64, 151, 68, 158, 398, 167, 99, 275, 324]
+
+# Create a figure
+plt.figure(figsize=(5, 4.8))
+
+# Scatter density plot for HGRY + M vs CNTRL + M
+sns.kdeplot(x=hgry_m, y=cntrl_m, cmap='Blues', fill=True, thresh=0, levels=100, label="HGRY + M vs CNTRL + M")
+
+# Add scatter dots
+plt.scatter(hgry_m, cntrl_m, color='r', edgecolor='r', alpha=0.6)
+
+# Add labels and title
+plt.xlabel('HGRY + M')
+plt.ylabel('CNTRL + M')
+plt.title('')
+
+#plt the figure with high resolution (format="png", dpi=600)
+
+# Show the plot with legend
+plt.show()
