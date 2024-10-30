@@ -1,0 +1,62 @@
+author : Sinan Malik (np lab)
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Create DataFrame
+data = [
+    [99.86, 100, 0.14, 0], [100, 100, 0, 0], [91.41, 100, 8.59, 0],
+    [94.51, 100, 5.49, 0], [100, 100, 0, 0], [100, 100, 0, 0],
+    [100, 100, 0, 0], [85.49, 100, 14.51, 0], [100, 100, 0, 0],
+    [100, 100, 0, 0], [82.33, 100, 17.67, 0], [80.87, 100, 19.13, 0],
+    [100, 100, 0, 0], [63.66, 100, 36.34, 0], [74.01, 100, 25.99, 0],
+    [92.62, 100, 7.38, 0], [76.77, 99.65, 23.23, 0.35], [86.04, 95.13, 13.96, 4.87],
+    [77.68, 100, 22.32, 0], [94.15, 100, 5.85, 0]
+]
+columns = ['CNRTL+SC', 'HGRY+SC', 'CNTRL+NSC', 'HGRY+NSC']
+df = pd.DataFrame(data, columns=columns)
+
+# Calculate Spearman correlation
+corr = df.corr(method='spearman')
+
+# Create figure
+plt.figure(figsize=(4.5, 4.5))
+
+# Create mask for upper triangle
+mask = np.zeros_like(corr, dtype=bool)
+mask[np.triu_indices_from(mask, k=1)] = True  # Mask upper triangle
+
+# Create heatmap
+sns.heatmap(corr,
+            mask=mask,
+            cmap='RdYlGn',
+            vmin=-1,
+            vmax=1,
+            center=0,
+            square=True,
+            annot=False,  # Disable automatic annotations
+            cbar_kws={'label': 'Correlation Coefficient', 'shrink': .65})
+
+# Add annotations for the masked values (lower triangle and diagonal)
+for i in range(len(corr.index)):
+    for j in range(len(corr.columns)):
+        if i >= j:  # Add annotations for lower triangle and diagonal
+            plt.text(j + 0.5, i + 0.5, f"{corr.iloc[i, j]:.2f}",
+                     ha='center', va='center', color='white', fontsize=11)  # Set fontsize here
+
+# Set labels and ticks font
+plt.xticks(fontsize=11, fontfamily='Arial')
+plt.yticks(fontsize=11, fontfamily='Arial')
+
+# Set title and adjust layout
+plt.title('')
+plt.tight_layout()
+plt.show()
+
+# Print correlation values for verification
+print("\nSpearman Correlation Matrix:")
+print(corr.round(2))
+
+- masking of the upper and lower triangle of the diagonal
