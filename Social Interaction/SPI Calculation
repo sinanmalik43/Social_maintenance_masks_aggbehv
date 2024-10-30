@@ -1,0 +1,23 @@
+import pandas as pd
+
+# Data for center and periphery time for CNTRL +CSF and HGRY +CSF groups
+data = {
+    'CNTRL +CSF+center': [0.5, 0, 30.92, 19.77, 0, 0, 0, 52.24, 0, 0, 63.6, 68.86, 0, 130.84, 93.56, 26.56, 83.62, 50.26, 80.36, 21.05],
+    'HGRY +CSF+center': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.28, 17.53, 0, 0],
+    'CNTRL +CSF+periphery': [359.53, 360, 329.08, 340.26, 360.01, 360.02, 360.02, 307.76, 360.03, 360.03, 296.43, 291.17, 360.01, 229.17, 266.45, 333.48, 276.41, 309.77, 279.67, 338.98],
+    'HGRY +CSF+periphery': [360.03, 360.02, 360.03, 360, 360.03, 360, 360.01, 360.01, 360.03, 360.03, 360.03, 360, 360.02, 360.03, 360.02, 360.01, 358.76, 342.48, 360.01, 360]
+}
+
+# Create a DataFrame from the provided data
+df = pd.DataFrame(data)
+
+# Calculate the SPI for CNTRL +CSF and HGRY +CSF groups
+df['SPI_CNTRL'] = (df['CNTRL +CSF+periphery'] - df['CNTRL +CSF+center']) / 360
+df['SPI_HGRY'] = (df['HGRY +CSF+periphery'] - df['HGRY +CSF+center']) / 360
+
+# Display the SPI values for both groups
+print("SPI for CNTRL +CSF group:")
+print(df['SPI_CNTRL'])
+
+print("\nSPI for HGRY +CSF group:")
+print(df['SPI_HGRY'])
