@@ -1,0 +1,63 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+from scipy.stats import mannwhitneyu
+
+# Sample data
+control =[0.26749934, 0.50164711, 0.34662595, 0.06553459, 0.0, 0.17943926,
+                        0.08711659, 0.18044873, 0.06571378, 0.27427025, 0.08029682, 0.357759,
+                        0.0, 0.0394536, 0.17494484, 0.1381182, 0.1528241, 0.21334029,
+                        0.43107615, 0.06575792]
+hungry = [0.1222863, 0.05009442, 0.40133799, 0.22235251, 0.46113249, 0.08890058,
+                       0.17746886, 0.23850839, 0.61813839, 0.36649573, 0.56488764, 0.22838501,
+                       0.046504, 0.33653751, 0.32837282, 0.38786352, 0.01057166, 0.15323245,
+                       0.32116824, 0.7129038]
+
+
+# Create figure and axis
+fig, ax = plt.subplots(figsize=(4.5, 5))
+
+# Define colors for control and hungry groups
+colors = ["green", "k"]
+
+# Create boxplot with customized outlier markers
+bp = ax.boxplot(
+    [control, hungry],
+    patch_artist=True,
+    boxprops=dict(facecolor='none', edgecolor=colors[0]),
+    whiskerprops=dict(color=colors[0]),
+    capprops=dict(color=colors[0]),
+    medianprops=dict(color=colors[0]),
+    flierprops=dict(marker='', markerfacecolor=colors[0], markersize=8),
+    positions=[0, 1],
+    widths=0.23
+)
+
+# Customize the second box
+bp['boxes'][1].set(edgecolor=colors[1])
+bp['whiskers'][2].set(color=colors[1])
+bp['whiskers'][3].set(color=colors[1])
+bp['caps'][2].set(color=colors[1])
+bp['caps'][3].set(color=colors[1])
+bp['medians'][1].set(color=colors[1])
+bp['fliers'][1].set(marker='', markerfacecolor=colors[1], markersize=8)
+
+# Strip plot (scatter points)
+sns.stripplot(data=[control, hungry], palette=colors, jitter=True, size=6, ax=ax)
+
+# Remove top and right spines
+sns.despine(left=False, bottom=False)
+
+# Add space before the y-axis
+plt.xlim(left=-0.3)
+
+# Customize plot
+plt.xticks([0, 1], ['Control_SC', 'Hungry_SC'], fontname='Arial', fontsize=12)
+plt.ylabel('R proj', labelpad=5.5, size=12, fontname='Arial')
+plt.tick_params(axis='x', which='minor', pad=6)
+plt.title('')
+
+# Show the plot
+plt.show()
+
+#plt the figure with high resolution (format="png", dpi=600)
