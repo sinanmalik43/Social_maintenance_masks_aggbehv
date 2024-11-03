@@ -1,0 +1,42 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data for Control and Hungry groups over time (10s to 60s)
+time_points = [10, 20, 30, 40, 50, 60]
+
+# Control group data
+control_data = [
+]
+
+# Hungry group data
+hungry_data = [
+    ]
+# Calculate the mean values for each time point for both groups
+control_mean = np.mean(control_data, axis=0)
+hungry_mean = np.mean(hungry_data, axis=0)
+
+# Plotting
+fig, ax1 = plt.subplots(figsize=(6.4, 4.8))
+
+# Plot for Control and Hungry groups
+ax1.plot(time_points, control_mean, label="Control", marker="o", color="blue")
+ax1.plot(time_points, hungry_mean, label="Hungry", marker="o", color="red")
+
+# X-axis settings
+ax1.set_xlabel("Time [s]")
+ax1.set_xticks(time_points)
+
+# Y-axis settings for social interaction count
+ax1.set_ylabel("Social Interaction Count")
+ax1.set_ylim(0, max(max(control_mean), max(hungry_mean)) + 1)
+
+# Right spine for response probability (as percentage)
+ax2 = ax1.twinx()
+ax2.set_ylabel("Response Probability [%]")
+ax2.set_ylim(0, 100)
+
+# Title and legend
+plt.title("Social Interaction Count over Time")
+ax1.legend(loc="upper left")
+
+plt.show()
