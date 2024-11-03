@@ -1,0 +1,75 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import scipy.stats as stats
+
+# Time points
+time_points = [10, 20, 30, 40, 50, 60]
+
+# Control group data
+control_data = [
+]
+
+# Hungry group data
+hungry_data = [
+    
+]
+
+# Calculate the mean values and standard deviations for each time point for both groups
+control_mean = np.mean(control_data, axis=0)
+hungry_mean = np.mean(hungry_data, axis=0)
+control_std = np.std(control_data, axis=0)
+hungry_std = np.std(hungry_data, axis=0)
+
+# Calculate 95% confidence intervals
+confidence_level = 0.95
+control_mean_ci = []
+hungry_mean_ci = []
+
+for t in range(len(time_points)):
+    # Control group confidence interval at each time point
+    control_sample = [row[t] for row in control_data]
+    control_mean = np.mean(control_sample)
+    control_se = stats.sem(control_sample)
+    control_ci = stats.t.interval(confidence_level, len(control_sample)-1, loc=control_mean, scale=control_se)
+    control_mean_ci.append((control_mean, control_ci))
+    
+    # Hungry group confidence interval at each time point
+    hungry_sample = [row[t] for row in hungry_data]
+    hungry_mean = np.mean(hungry_sample)
+    hungry_se = stats.sem(hungry_sample)
+    hungry_ci = stats.t.interval(confidence_level, len(hungry_sample)-1, loc=hungry_mean, scale=hungry_se)
+    hungry_mean_ci.append((hungry_mean, hungry_ci))
+
+# Plotting
+fig, ax = plt.subplots(figsize=(6.4, 4.8))
+
+# Plot for Control and Hungry groups with error bars for standard deviation
+ax.errorbar(time_points, np.mean(control_data, axis=0), yerr=np.std(control_data, axis=0), 
+            label="Control", marker="o", color="blue", capsize=3, linestyle='-')
+ax.errorbar(time_points, np.mean(hungry_data, axis=0), yerr=np.std(hungry_data, axis=0), 
+            label="Hungry", marker="o", color="red", capsize=3, linestyle='-')
+
+# X-axis settings
+ax.set_xlabel("Time [s]")
+ax.set_xticks(time_points)
+
+# Y-axis settings for social interaction count
+ax.set_ylabel("Social Interaction Count")
+ax.set_ylim(0, max(max(control_mean + control_std), max(hungry_mean + hungry_std)) + 1)
+
+# Title and legend
+ax.legend(loc="upper left")
+
+# Despine (remove top and right spines)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+plt.show()
+
+# Print the mean and confidence interval for each time point
+for i, time in enumerate(time_points):
+    control_m, control_ci = control_mean_ci[i]
+    hungry_m, hungry_ci = hungry_mean_ci[i]
+    print(f"Time {time}s - Control Mean: {control_m:.2f}, 95% CI: [{control_ci[0]:.2f}, {control_ci[1]:.2f}]")
+    print(f"Time {time}s - Hungry Mean: {hungry_m:.2f}, 95% CI: [{hungry_ci[0]:.2f}, {hungry_ci[1]:.2f}]")
+    print("---")
