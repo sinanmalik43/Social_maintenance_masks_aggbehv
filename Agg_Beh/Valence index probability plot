@@ -1,0 +1,56 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Data [to add]
+
+# Function to group data into smaller chunks and calculate means and standard deviations
+def group_data(data, group_size=3):
+    n = len(data)
+    n_groups = n // group_size
+    grouped = np.array_split(data, n_groups)
+    means = [np.mean(group) for group in grouped]
+    stds = [np.std(group) for group in grouped]
+    return means, stds
+
+# Sort the data
+valence_hgry_m_sorted = np.sort(valence_hgry_m)
+valence_cntrl_m_sorted = np.sort(valence_cntrl_m)
+
+# Calculate response probabilities (cumulative distribution normalized)
+response_prob_hgry_m = np.linspace(1 / len(valence_hgry_m_sorted), 1, len(valence_hgry_m_sorted))
+response_prob_cntrl_m = np.linspace(1 / len(valence_cntrl_m_sorted), 1, len(valence_cntrl_m_sorted))
+
+# Group the data (here, group_size can be changed depending on how you want to aggregate)
+means_hgry, stds_hgry = group_data(response_prob_hgry_m)
+means_cntrl, stds_cntrl = group_data(response_prob_cntrl_m)
+
+# Create x-axis points (the means of valence index for each group)
+x_hgry = np.linspace(min(valence_hgry_m_sorted), max(valence_hgry_m_sorted), len(means_hgry))
+x_cntrl = np.linspace(min(valence_cntrl_m_sorted), max(valence_cntrl_m_sorted), len(means_cntrl))
+
+# Plotting
+plt.figure(figsize=(5, 5))
+
+# Plot with error bars
+plt.errorbar(x_hgry, means_hgry, yerr=stds_hgry, fmt='o-', 
+             color='blue', label='HGRY+M', capsize=5, markersize=8, 
+             linestyle='-.', linewidth=1.5)
+
+plt.errorbar(x_cntrl, means_cntrl, yerr=stds_cntrl, fmt='o-',
+             color='orange', label='CNTRL+M', capsize=5, markersize=8,
+             linestyle='-.', linewidth=1.5)
+
+# Customize the plot
+plt.xlabel('Valence Index (VI)', labelpad=5.5, size=12, fontname='Arial')
+plt.ylabel('Response probability', labelpad=5.5, size=12, fontname='Arial')
+plt.legend()
+
+# Set axis limits to fit the response probabilities
+plt.ylim(0, 1)
+
+# Add grid for better readability
+plt.grid(True, alpha=0.3)
+
+# Tight layout to adjust for label spacing
+plt.tight_layout()
+plt.show()
