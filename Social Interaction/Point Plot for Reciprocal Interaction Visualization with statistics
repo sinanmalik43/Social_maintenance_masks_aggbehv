@@ -1,0 +1,72 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import scipy.stats as stats
+
+# Time points
+time_points = [10, 20, 30, 40, 50, 60]
+
+# Control group data
+control_data = [
+   
+]
+
+# Hungry group data
+hungry_data = [
+    
+]
+
+# Initialize lists to store metrics for printing and interaction probability
+control_mean_ci = []
+hungry_mean_ci = []
+interaction_probabilities = []
+
+# Calculate means, standard deviations, standard errors, confidence intervals, and interaction probabilities
+for t in range(len(time_points)):
+    # Control group statistics
+    control_sample = [row[t] for row in control_data]
+    control_mean = np.mean(control_sample)
+    control_std = np.std(control_sample, ddof=1)  # sample standard deviation
+    control_se = stats.sem(control_sample)
+    control_ci = stats.t.interval(0.95, len(control_sample)-1, loc=control_mean, scale=control_se)
+    control_mean_ci.append((control_mean, control_std, control_se, control_ci))
+    
+    # Hungry group statistics
+    hungry_sample = [row[t] for row in hungry_data]
+    hungry_mean = np.mean(hungry_sample)
+    hungry_std = np.std(hungry_sample, ddof=1)  # sample standard deviation
+    hungry_se = stats.sem(hungry_sample)
+    hungry_ci = stats.t.interval(0.95, len(hungry_sample)-1, loc=hungry_mean, scale=hungry_se)
+    hungry_mean_ci.append((hungry_mean, hungry_std, hungry_se, hungry_ci))
+    
+    # Interaction probability: proportion of non-zero interactions
+    control_non_zero = sum(1 for x in control_sample if x > 0) / len(control_sample)
+    hungry_non_zero = sum(1 for x in hungry_sample if x > 0) / len(hungry_sample)
+    avg_interaction_prob = (control_non_zero + hungry_non_zero) / 2
+    interaction_probabilities.append(avg_interaction_prob)
+
+# Plotting
+fig, ax1 = plt.subplots(figsize=(6.4, 4.8))
+
+# Plot Control and Hungry means with standard deviation as error bars
+ax1.errorbar(time_points, [c[0] for c in control_mean_ci], yerr=[c[1] for c in control_mean_ci],
+             label="Control", marker="o", color="orange", capsize=5, linestyle='--')
+ax1.errorbar(time_points, [h[0] for h in hungry_mean_ci], yerr=[h[1] for h in hungry_mean_ci],
+             label="Hungry", marker="o", color="purple", capsize=5, linestyle='-')
+
+# Primary Y-axis for Social Interaction Count
+ax1.set_xlabel("Time [s]",labelpad=5.5, size=12, fontname='Arial')
+ax1.set_ylabel("Social Interaction Count",labelpad=5.5, size=12, fontname='Arial')
+ax1.legend(loc="upper right")
+
+# Secondary Y-axis for Interaction Probability (scaled 0-1)
+ax2 = ax1.twinx()
+ax2.plot(label="Interaction Probability")
+ax2.set_ylabel("Interaction Probability",labelpad=5.5, size=12, fontname='Arial')
+ax2.set_ylim(0, 1)
+
+# Despine the top and right spines
+ax1.spines['top'].set_visible(False)
+ax2.spines['top'].set_visible(False)
+ax1.spines['right'].set_visible(False)
+
+plt.show()
