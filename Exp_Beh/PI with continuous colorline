@@ -1,0 +1,60 @@
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import matplotlib.lines as mlines
+
+# Example DataFrame setup
+data = {
+    
+}
+df = pd.DataFrame(data)
+
+# Sort data for cumulative probability calculation
+df_sorted_cntrl = df.sort_values(by='Parallel_Index_CNTRL')
+df_sorted_hgry = df.sort_values(by='Parallel_Index_HGRY')
+
+# Calculate cumulative probability for control and hungry conditions
+df_sorted_cntrl['Cumulative_Probability_CNTRL'] = np.arange(1, len(df_sorted_cntrl) + 1) / len(df_sorted_cntrl)
+df_sorted_hgry['Cumulative_Probability_HGRY'] = np.arange(1, len(df_sorted_hgry) + 1) / len(df_sorted_hgry)
+
+# Set up colormap for control and hungry
+control_cmap = cm.get_cmap('Greens')  # Green colormap
+hungry_cmap = cm.get_cmap('Greys')  # Black/grey colormap
+
+# Plot cumulative probability against Parallel Index for both conditions
+plt.figure(figsize=(5, 5))
+
+# Control plot (apply gradient color, starting from medium shades to higher shades)
+for i in range(1, len(df_sorted_cntrl)):
+    # Start at 0.5 for medium shades (half of the colormap range) and go up
+    color = control_cmap(0.5 + (i / len(df_sorted_cntrl)) / 2)
+    plt.plot(df_sorted_cntrl['Parallel_Index_CNTRL'][i-1:i+1], 
+             df_sorted_cntrl['Cumulative_Probability_CNTRL'][i-1:i+1], 
+             marker='o', linestyle='-', color=color, alpha=0.8)
+
+# Hungry plot (apply gradient color, starting from medium shades to higher shades)
+for i in range(1, len(df_sorted_hgry)):
+    # Start at 0.5 for medium shades (half of the colormap range) and go up
+    color = hungry_cmap(0.5 + (i / len(df_sorted_hgry)) / 2)
+    plt.plot(df_sorted_hgry['Parallel_Index_HGRY'][i-1:i+1], 
+             df_sorted_hgry['Cumulative_Probability_HGRY'][i-1:i+1], 
+             marker='o', linestyle='-', color=color, alpha=0.8)
+
+# Custom legend handles
+control_handle = mlines.Line2D([], [], color=control_cmap(0.75), label='Control', marker='o', linestyle='-')  # Green color from the upper middle part of the gradient
+hungry_handle = mlines.Line2D([], [], color=hungry_cmap(0.75), label='Hungry', marker='o', linestyle='-')  # Grey color from the upper middle part of the gradient
+
+# Remove top and right spines
+sns.despine(left=False, bottom=False)
+
+# Set labels and show the figure with high resolution
+plt.xlabel('Parallel Index (PI)', labelpad=5.5, fontname='Arial', fontsize=13)
+plt.ylabel('Cumulative probability', labelpad=5.5, fontname='Arial', fontsize=13)
+
+# Add the custom legend
+plt.legend(handles=[control_handle, hungry_handle], loc='center right')
+
+# Show the plot
+plt.show()
