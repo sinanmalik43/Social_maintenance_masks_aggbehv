@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Data for HGRY + M and CNTRL + M
-hgry_m = [778, 763, 752, 667, 921, 846, 654, 572, 214, 736, 762, 811, 598, 712, 654, 797, 958, 824, 818, 1032]
-cntrl_m = [263, 217, 131, 16, 212, 314, 237, 46, 372, 103, 164, 64, 151, 68, 158, 398, 167, 99, 275, 324]
+hgry_m = []
+cntrl_m = []
 
 # Create a figure
 plt.figure(figsize=(5, 4.8))
