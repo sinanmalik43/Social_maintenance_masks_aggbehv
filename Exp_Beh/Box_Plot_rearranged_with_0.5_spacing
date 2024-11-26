@@ -1,0 +1,82 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+from scipy.stats import mannwhitneyu
+
+# Sample data
+control = []
+hungry = []
+
+# Mann-Whitney U test (since data might not be normally distributed)
+stat, p_value = mannwhitneyu(control, hungry)
+
+# Set significance levels
+if p_value < 0.001:
+    significance = '****'
+elif p_value < 0.001:
+    significance = '***'
+elif p_value < 0.01:
+    significance = '**'
+elif p_value < 0.05:
+    significance = '*'
+else:
+    significance = 'ns'
+
+# Create figure and axis
+fig, ax = plt.subplots(figsize=(4.5, 4.5))
+
+# Define colors for control and hungry groups
+colors = ["green", "k"]
+
+# Create boxplot with customized outlier markers
+bp = ax.boxplot(
+    [control, hungry],
+    patch_artist=True,
+    boxprops=dict(facecolor='none', edgecolor=colors[0]),
+    whiskerprops=dict(color=colors[0]),
+    capprops=dict(color=colors[0]),
+    medianprops=dict(color=colors[0]),
+    flierprops=dict(marker='', markerfacecolor=colors[0], markersize=8),
+    positions=[0, 0.5],  # Adjust the position for the "Hungry" group
+    widths=0.17
+)
+
+# Customize the second box
+bp['boxes'][1].set(edgecolor=colors[1])
+bp['whiskers'][2].set(color=colors[1])
+bp['whiskers'][3].set(color=colors[1])
+bp['caps'][2].set(color=colors[1])
+bp['caps'][3].set(color=colors[1])
+bp['medians'][1].set(color=colors[1])
+bp['fliers'][1].set(marker='', markerfacecolor=colors[1], markersize=8)
+
+
+# Strip plot (scatter points) with jitter
+jitter_strength = 0.04  # Adjust jitter strength to your preference
+ax.scatter(np.zeros_like(control) + np.random.normal(0, jitter_strength, len(control)), control, color=colors[0], s=22, alpha=0.9)
+ax.scatter(np.ones_like(hungry) * 0.5 + np.random.normal(0, jitter_strength, len(hungry)), hungry, color=colors[1], s=22, alpha=0.9)
+
+# Remove top and right spines
+sns.despine(left=False, bottom=False)
+
+# Add space before the y-axis
+plt.xlim(left=-0.3)
+
+# Adding the significance label and line
+y, h, col = max(max(control), max(hungry)) + 3, 3, 'k'
+plt.plot([0, 0, 0.5, 0.5], [y, y + h, y + h, y], lw=0.9, c=col)
+plt.text(0.25, y + h + 2, significance, ha='center', va='bottom', color=col, fontsize=11)
+
+# Customize plot
+plt.xticks([0, 0.5], ['CNTRL+SC', 'HGRY+SC'], fontname='Arial', fontsize=12)
+plt.ylabel('Cumulative time in non-social ROI [%]', labelpad=5.5, size=13, fontname='Arial')
+plt.tick_params(axis='x', which='minor', pad=6)
+plt.title('')
+
+# Show the plot
+plt.show()
+
+#plt the figure with high resolution (format="png", dpi=600)
+
+# Print p-value for reference
+print(f"P-value: {p_value}")
