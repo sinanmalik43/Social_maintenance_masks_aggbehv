@@ -1,0 +1,105 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+from scipy.stats import mannwhitneyu
+
+# Data for the four groups
+spi_cntrl_habituation = []
+
+spi_hgry_habituation = []
+
+spi_cntrl_test = []
+
+spi_hgry_test = []
+
+# Perform Mann-Whitney U test for all comparisons
+stat1, p_value1 = mannwhitneyu(spi_cntrl_habituation, spi_hgry_habituation)
+stat2, p_value2 = mannwhitneyu(spi_cntrl_test, spi_hgry_test)
+
+# Set significance level
+if p_value < 0.001:
+    significance = '****'
+elif p_value < 0.001:
+    significance = '***'
+elif p_value < 0.01:
+    significance = '**'
+elif p_value < 0.05:
+    significance = '*'
+else:
+    significance = 'ns'
+
+
+# Create figure and axis
+fig, ax = plt.subplots(figsize=(5, 5))
+
+# Define colors for control and hungry groups
+colors = ["green", "black"]
+
+# Create boxplot with customized outlier markers for all four groups
+data = [spi_cntrl_habituation, spi_hgry_habituation, spi_cntrl_test, spi_hgry_test]
+positions = [0, 0.5, 1, 1.5]
+bp = ax.boxplot(
+    data,
+    patch_artist=True,
+    boxprops=dict(facecolor='none', edgecolor=colors[0]),
+    whiskerprops=dict(color=colors[0]),
+    capprops=dict(color=colors[0]),
+    medianprops=dict(color=colors[0]),
+    flierprops=dict(marker='', markerfacecolor=colors[0], markersize=8),
+    positions=positions,
+    widths=0.23
+)
+
+# Customize the second and fourth box (hungry groups) to black
+bp['boxes'][1].set(edgecolor=colors[1])
+bp['whiskers'][2].set(color=colors[1])
+bp['whiskers'][3].set(color=colors[1])
+bp['caps'][2].set(color=colors[1])
+bp['caps'][3].set(color=colors[1])
+bp['medians'][1].set(color=colors[1])
+
+bp['boxes'][3].set(edgecolor=colors[1])
+bp['whiskers'][6].set(color=colors[1])
+bp['whiskers'][7].set(color=colors[1])
+bp['caps'][6].set(color=colors[1])
+bp['caps'][7].set(color=colors[1])
+bp['medians'][3].set(color=colors[1])
+
+# Add scatter points aligned with boxplot positions
+jitter_strength = 0.05
+for pos, group, color in zip(positions, data, [colors[0], colors[1], colors[0], colors[1]]):
+    ax.scatter(
+        np.random.normal(pos, jitter_strength, len(group)),  # Add jitter around boxplot position
+        group,
+        alpha=0.8,
+        color=color,
+        s=40,)
+
+# Adding the significance labels and lines
+y1, h1, col = max(max(spi_cntrl_habituation), max(spi_hgry_habituation)) + 0.05, 0.05, 'k'
+ax.plot([positions[0], positions[0], positions[1], positions[1]], [y1, y1 + h1, y1 + h1, y1], lw=0.9, c=col)
+ax.text((positions[0] + positions[1]) / 2, y1 + h1 + 0.02, significance1, ha='center', va='bottom', color=col, fontsize=11)
+
+y2, h2, col = max(max(spi_cntrl_test), max(spi_hgry_test)) + 0.05, 0.05, 'k'
+ax.plot([positions[2], positions[2], positions[3], positions[3]], [y2, y2 + h2, y2 + h2, y2], lw=0.9, c=col)
+ax.text((positions[2] + positions[3]) / 2, y2 + h2 + 0.02, significance2, ha='center', va='bottom', color=col, fontsize=11)
+
+# Customize the plot
+ax.set_xticks(positions)
+ax.set_xticklabels(['CNTRL', 'HGRY', 'CNTRL+SC', 'HGRY+SC'], fontsize=12)
+ax.set_ylabel('Social Preference Index [SPI]', fontsize=12)
+sns.despine()
+plt.tight_layout()
+
+# Add space before the y-axis
+plt.xlim(left=-0.3)
+
+# Show plot
+plt.show()
+
+
+#plt the figure with high resolution (format="png", dpi=600)
+
+# Print p-values for reference
+print(f"P-value habituation: {p_value1}")
+print(f"P-value test: {p_value2}")
