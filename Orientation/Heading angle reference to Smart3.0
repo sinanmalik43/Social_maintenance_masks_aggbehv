@@ -1,0 +1,57 @@
+Author : sinan malik (np lab)
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Data
+turning_tendency_cntrl = []
+turning_tendency_hgry = []
+
+# Convert turning tendencies to angles (0 to 360 degrees)
+def tendency_to_angle(tendency):
+    return (tendency + 1) * 180  # Map [-1, 1] to [0, 360]
+
+# Calculate vector lengths (R) with scaling
+def calculate_R(tendencies, scale_factor=5):
+    return np.abs(tendencies) * scale_factor
+
+# Add jitter to angles and R values
+def add_jitter(values, jitter_amount):
+    return values + np.random.uniform(-jitter_amount, jitter_amount, len(values))
+
+# Convert data
+angles_cntrl = [tendency_to_angle(t) for t in turning_tendency_cntrl]
+angles_hgry = [tendency_to_angle(t) for t in turning_tendency_hgry]
+R_cntrl = calculate_R(turning_tendency_cntrl)
+R_hgry = calculate_R(turning_tendency_hgry)
+
+# Add jitter
+jitter_amount_angle = 10  # degrees
+jitter_amount_R = 0.05
+angles_cntrl_jittered = add_jitter(angles_cntrl, jitter_amount_angle)
+angles_hgry_jittered = add_jitter(angles_hgry, jitter_amount_angle)
+R_cntrl_jittered = np.clip(add_jitter(R_cntrl, jitter_amount_R), 0, 1)
+R_hgry_jittered = np.clip(add_jitter(R_hgry, jitter_amount_R), 0, 1)
+
+# Create polar scatter plot
+fig, ax = plt.subplots(figsize=(5, 5), subplot_kw=dict(projection='polar'))
+
+# Plot control group
+ax.scatter(np.radians(angles_cntrl_jittered), R_cntrl_jittered, c='blue', alpha=0.7, label='Control', s=50)
+
+# Plot hungry group
+ax.scatter(np.radians(angles_hgry_jittered), R_hgry_jittered, c='red', alpha=0.7, label='Hungry', s=50)
+
+# Customize the plot
+ax.set_theta_zero_location('N')
+ax.set_theta_direction(-1)
+ax.set_ylim(0, 1.2)  # Adjusted to show full range of scaled data
+ax.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
+ax.set_yticklabels(['0.04', '0.08', '0.12', '0.16', '0.20'])  # Adjusted to show original scale
+ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1))
+
+# Add gridlines
+ax.grid(True)
+
+plt.tight_layout()
+plt.show()
